@@ -61,6 +61,4 @@ public class StudyMemberController {
         return ResponseEntity.ok("거절 완료");
     }
 
-
-
 }

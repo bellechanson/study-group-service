@@ -48,9 +48,37 @@ public class StudyMemberService {
         StudyMember member = studyMemberRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("신청자 정보를 찾을 수 없습니다. ID: " + id));
 
-        member.setStatus(newStatus); // 예: "수락"
+        // 이미 수락된 경우 다시 수락 불가
+        if ("수락".equals(member.getStatus())) {
+            throw new IllegalArgumentException("이미 수락된 신청자입니다.");
+        }
+
+        // 수락 처리일 때만 currentMember 증가 및 마감 검사
+        if ("수락".equals(newStatus)) {
+            StudyGroup group = member.getStudy();
+
+            // 현재 인원이 이미 다 찼으면 수락 불가
+            if (group.getCurrentMember() >= group.getMaxMember()) {
+                throw new IllegalArgumentException("모집 인원이 이미 가득 찼습니다.");
+            }
+
+            // currentMember +1
+            group.setCurrentMember(group.getCurrentMember() + 1);
+
+            // 인원이 다 찼다면 자동 마감
+            if (group.getCurrentMember().equals(group.getMaxMember())) {
+                group.setStatus("마감");
+            }
+
+            // 그룹 저장
+            studyGroupRepository.save(group);
+        }
+
+        // 상태 변경 및 저장
+        member.setStatus(newStatus);
         return studyMemberRepository.save(member);
     }
+
 
     /**
      * ✅ 마스터가 특정 멤버 강제 탈퇴

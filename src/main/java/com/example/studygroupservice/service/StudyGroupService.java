@@ -40,6 +40,7 @@ public class StudyGroupService {
 
     public StudyMember create(StudyGroup group, Long userId) {
 
+        group.setOwnerId(userId);
         StudyGroup study = studyGroupRepository.save(group);
         StudyMember member = StudyMember.builder()
                 .study(study)

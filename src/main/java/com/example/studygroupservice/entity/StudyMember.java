@@ -1,5 +1,6 @@
 package com.example.studygroupservice.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDateTime;
@@ -13,6 +14,7 @@ public class StudyMember {
     private Long id;
 
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(name = "study_id", nullable = false)
     private StudyGroup study;
 

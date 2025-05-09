@@ -38,14 +38,17 @@ public class StudyGroupService {
 //        return studyMemberRepository.save(member);
 //    }
 
+    // ✅ 스터디 그룹 생성 시 마스터 포함 → currentMember = 1
     public StudyMember create(StudyGroup group, Long userId) {
-
         group.setOwnerId(userId);
+        group.setCurrentMember(1);               // ✅ 마스터 포함 인원 설정
+        group.setStatus("모집중");               // 기본 상태
         StudyGroup study = studyGroupRepository.save(group);
+
         StudyMember member = StudyMember.builder()
                 .study(study)
                 .userId(userId)
-                .status("마스터") // 신청 시 바로 방장
+                .status("마스터")                // ✅ 마스터로 등록
                 .build();
 
         return studyMemberRepository.save(member);

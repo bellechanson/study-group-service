@@ -61,4 +61,15 @@ public class StudyMemberController {
         return ResponseEntity.ok("거절 완료");
     }
 
+    // ✅ 유저가 스터디에서 자발적으로 탈퇴
+    @DeleteMapping("/{memberId}/leave")
+    public ResponseEntity<?> leaveGroup(
+            @PathVariable Long memberId,
+            @RequestParam Long userId
+    ) {
+        studyMemberService.leave(memberId, userId);
+        return ResponseEntity.ok("스터디 탈퇴 완료");
+    }
+
+
 }

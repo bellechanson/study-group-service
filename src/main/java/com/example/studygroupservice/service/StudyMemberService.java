@@ -121,4 +121,34 @@ public class StudyMemberService {
         studyMemberRepository.deleteById(memberId);
     }
 
+
+    // 유저가 나가기
+    public void leave(Long memberId, Long userId) {
+        StudyMember member = studyMemberRepository.findById(memberId)
+                .orElseThrow(() -> new IllegalArgumentException("신청 정보를 찾을 수 없습니다."));
+
+        StudyGroup group = member.getStudy();
+
+        // 마스터는 탈퇴 불가
+        if ("마스터".equals(member.getStatus())) {
+            throw new IllegalArgumentException("마스터는 탈퇴할 수 없습니다.");
+        }
+
+        // 본인 확인
+        if (!member.getUserId().equals(userId)) {
+            throw new IllegalArgumentException("본인만 탈퇴할 수 있습니다.");
+        }
+
+        // 수락된 멤버라면 currentMember 감소
+        if ("수락".equals(member.getStatus())) {
+            int current = group.getCurrentMember();
+            group.setCurrentMember(Math.max(0, current - 1));
+            studyGroupRepository.save(group);
+        }
+
+        // 실제 탈퇴 (삭제)
+        studyMemberRepository.deleteById(memberId);
+    }
+
+
 }

@@ -4,6 +4,9 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.ArrayList;
+
 
 @Entity
 @Getter @Setter
@@ -34,4 +37,8 @@ public class StudyGroup {
         if (this.status == null) this.status = "모집중";
         if (this.currentMember == null) this.currentMember = 0;
     }
+
+    @OneToMany(mappedBy = "study", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<StudyMember> members = new ArrayList<>();
+
 }

@@ -41,4 +41,26 @@ public class StudyMemberController {
         return ResponseEntity.ok(studyMemberService.updateStatus(id, updated.getStatus()));
     }
 
+    // ✅ 마스터가 특정 멤버를 강제 탈퇴
+    @DeleteMapping("/{memberId}/kick")
+    public ResponseEntity<?> kickMember(
+            @PathVariable Long memberId,
+            @RequestParam Long requesterId // 마스터 ID (검증용)
+    ) {
+        studyMemberService.kickMember(memberId, requesterId);
+        return ResponseEntity.ok("강제 탈퇴 완료");
+    }
+
+    // ✅ 마스터가 신청자를 거절 처리
+    @PutMapping("/{id}/reject")
+    public ResponseEntity<?> reject(
+            @PathVariable Long id,
+            @RequestParam Long requesterId
+    ) {
+        studyMemberService.reject(id, requesterId);
+        return ResponseEntity.ok("거절 완료");
+    }
+
+
+
 }

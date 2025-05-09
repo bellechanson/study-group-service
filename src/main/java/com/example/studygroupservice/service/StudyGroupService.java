@@ -1,7 +1,9 @@
 package com.example.studygroupservice.service;
 
 import com.example.studygroupservice.entity.StudyGroup;
+import com.example.studygroupservice.entity.StudyMember;
 import com.example.studygroupservice.repository.StudyGroupRepository;
+import com.example.studygroupservice.repository.StudyMemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -14,14 +16,40 @@ import org.springframework.stereotype.Service;
 public class StudyGroupService {
 
     private final StudyGroupRepository studyGroupRepository;
+    private final StudyMemberRepository studyMemberRepository;
 
     /**
      * 📌 스터디 모집글 생성
      * - 작성자가 포함된 StudyGroup 객체를 받아 저장
      */
-    public StudyGroup create(StudyGroup group) {
-        return studyGroupRepository.save(group);
+//    public StudyGroup create(StudyGroup group) {
+//        return studyGroupRepository.save(group);
+//    }
+//
+//    public StudyMember apply(Long studyId, Long userId) {
+//        StudyGroup study = new StudyGroup();
+//
+//        StudyMember member = StudyMember.builder()
+//                .study(study)
+//                .userId(userId)
+//                .status("마스터") // 신청 시 바로 방장
+//                .build();
+//
+//        return studyMemberRepository.save(member);
+//    }
+
+    public StudyMember create(StudyGroup group, Long userId) {
+
+        StudyGroup study = studyGroupRepository.save(group);
+        StudyMember member = StudyMember.builder()
+                .study(study)
+                .userId(userId)
+                .status("마스터") // 신청 시 바로 방장
+                .build();
+
+        return studyMemberRepository.save(member);
     }
+
 
     /**
      * 📌 모집글 목록 페이징 조회

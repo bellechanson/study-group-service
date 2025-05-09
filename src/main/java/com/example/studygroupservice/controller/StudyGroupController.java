@@ -19,8 +19,12 @@ public class StudyGroupController {
      * 요청 본문에 StudyGroup 정보 (ownerId 포함)를 전달받아 저장
      */
     @PostMapping
-    public ResponseEntity<StudyGroup> create(@RequestBody StudyGroup group) {
-        return ResponseEntity.ok(studyGroupService.create(group));
+    public ResponseEntity<?> create(
+            @RequestBody StudyGroup group,
+            @RequestParam Long userId
+    ) {
+        studyGroupService.create(group, userId);
+        return ResponseEntity.ok("확인~");
     }
 
     /**
